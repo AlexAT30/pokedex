@@ -45,7 +45,7 @@ const PokemonAbout = ({ pokemon, speciesData }) => {
             <p> {`${pokemon.base_experience} xp`} </p>
             {/* Habitat */}
             <p className='text-bold' >Habitat</p>
-            <p className='f-mayus' > {speciesData.habitat.name} </p>
+            <p className='f-mayus' > {speciesData.habitat? speciesData.habitat.name: 'Unknown'} </p>
             {/* Habitat */}
             <p className='text-bold' >Gender differences</p>
             <p className='f-mayus' > {`${speciesData.has_gender_differences}`} </p>
