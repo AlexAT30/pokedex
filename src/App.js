@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import { HashRouter as Router, Switch, Route, Redirect  } from 'react-router-dom';
 import PokedexContainer from './componets/PokedexContainer';
 import PokemonContainer from './componets/PokemonContainer';
 import { serviceGet } from './services/get';
 import { useForm } from 'react-hook-form';
+import PokedexPagination from './componets/PokedexPagination';
 
 
 function App() {
   const [apiResponse, setApiResponse] = useState(null); 
   const [allPokemons, setAllPokemons] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPokemon, setCurrentPokemon] = useState(null);
   const [page, setPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
   const [failedSearch, setFailedSearch] = useState(false);
   const [pokemonsData, setPokemonsData] = useState([]);
-
+  
   // Form
   const {register, handleSubmit} = useForm();
   const [filterData, setFilterData] = useState(null);
@@ -51,7 +54,8 @@ function App() {
             const pokemonsByType = data.pokemon.map(element => element.pokemon);
             // Name filter
             const filterName = pokemonsByType.filter(element => element.name.indexOf(filterData.name.toLowerCase()) !== -1);
-            setAllPokemons(filterName)
+            setAllPokemons(filterName);
+            setCurrentPage(0);
           }
           filteredPokemonsNameType();
         }
@@ -65,6 +69,7 @@ function App() {
               setAllPokemons(pokemonsByType);
             }
             filteredPokemonType();
+            setCurrentPage(0);
           }
           // Name Filter
           if (filterData.name !== '') {
@@ -73,14 +78,16 @@ function App() {
               setAllPokemons(filterName)
             }
             filteredPokemonName();
+            setCurrentPage(0);
           }
           // Not filtered
           if ( filterData.name === '' && filterData.type === '' ) {
             setAllPokemons(apiResponse.results);
+            setCurrentPage(0);
           }
         }
       }
-    }, [filterData]
+    }, [filterData, apiResponse]
   )
 
   // Failed Search
@@ -97,26 +104,6 @@ function App() {
 
     }, [allPokemons]
   )
-  // Pagination
-  useEffect (
-    () => {
-      if (allPokemons) {
-        const numberOfPages =  Math.ceil(allPokemons.length / 4);
-        setPage(allPokemons.slice(currentPage, currentPage +4));
-      }
-    }, [allPokemons, currentPage]
-  )
-  const onChangePage = (num) => {
-    setCurrentPage(prev => prev +num*4);
-  }
-  const onChangePageGroup = (action) => {
-    if (action === 'next') {
-      setCurrentPage(prev => prev +40)
-    }
-    if (action === 'back') {
-      setCurrentPage(prev => prev -40)
-    }
-  }
 
   // Fetch details
   useEffect(
@@ -138,39 +125,35 @@ function App() {
   useEffect(
     () => {
       if (pokemonsData) {
-        setPokemonsData(data => data = data.sort((a, b) => a.order - b.order))
+        setPokemonsData(data => data = data.sort((a, b) => a.id - b.id))
       }
     }, [pokemonsData]
   )
 
   return (
-    <div>
-      <PokedexContainer
-      pokemonsData={pokemonsData}
-      register={register}
-      handleSubmit={handleSubmit}
-      setFilterData={setFilterData}
-      failedSearch={failedSearch} />
-      <div>
-        <button onClick={()=> onChangePageGroup('back')} >back</button>
-        <button onClick={()=> onChangePageGroup('next')} >next</button>
-        <button onClick={() => onChangePage(0)} >1</button>
-        <button onClick={() => onChangePage(1)} >2</button>
-        <button onClick={() => onChangePage(2)} >3</button>
-        <button onClick={() => onChangePage(3)} >4</button>
-        <button onClick={() => onChangePage(4)} >5</button>
-        <button onClick={() => onChangePage(5)} >6</button>
-        <button onClick={() => onChangePage(6)} >7</button>
-        <button onClick={() => onChangePage(7)} >8</button>
-        <button onClick={() => onChangePage(8)} >9</button>
-        <button onClick={() => onChangePage(9)} >10</button>
-      </div>
-
-
-
-      {/* <PokemonContainer pokemon={pokemonsData[0]}/> */}
-
-    </div>
+    <Router>
+      <Switch>
+        <Route path='/pokedex'>
+          <PokedexContainer
+            pokemonsData={pokemonsData}
+            register={register}
+            handleSubmit={handleSubmit}
+            setFilterData={setFilterData}
+            failedSearch={failedSearch}
+            setCurrentPokemon={setCurrentPokemon} />
+          <PokedexPagination
+            allPokemons={allPokemons}
+            setPage={setPage} currentPage={currentPage}
+            setCurrentPage={setCurrentPage} />
+        </Route>
+        <Route path='/pokemon-:pokemonName' >
+          <PokemonContainer pokemon={currentPokemon}/>
+        </Route>
+        <Route path='/' >
+          <Redirect to='/pokedex' />
+        </Route> 
+      </Switch>
+    </Router>
   );
 }
 

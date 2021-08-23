@@ -1,9 +1,6 @@
-import { useState } from "react"
-import { serviceGet } from "../services/get"
+import { Link } from 'react-router-dom'
 
-import { useForm } from 'react-hook-form';
-
-const PokedexContainer = ({ pokemonsData, register, handleSubmit, setFilterData, failedSearch }) => {
+const PokedexContainer = ({ pokemonsData, register, handleSubmit, setFilterData, failedSearch, setCurrentPokemon }) => {
 
   const pokemonsList = pokemonsData.map(element => {
     // Types
@@ -15,16 +12,18 @@ const PokedexContainer = ({ pokemonsData, register, handleSubmit, setFilterData,
       )
     })
     return (
-      <div className={`pokedexContainer__pokemon col-11 color-${element.types[0].type.name}`} key={element.id} >
-        <div className='ms-3' >
-          <p className={`m-0 mt-1 specialColor-${element.types[0].type.name}`} > {`#${element.id}`} </p>
-          <h2 className='color-white f-mayus m-0' > {element.name} </h2>
-          <div className='mt-2 mb-3 d-flex' >{typesList}</div>
+      <Link to={`/pokemon-${element.name}`} key={element.id} onClick={() => setCurrentPokemon(element)} style={{width:'100%'}} >
+        <div className={`pokedexContainer__pokemon col-11 color-${element.types[0].type.name}`} >
+          <div className='ms-3' >
+            <p className={`m-0 mt-1 specialColor-${element.types[0].type.name}`} > {`#${element.id}`} </p>
+            <h2 className='color-white f-mayus m-0' > {element.name} </h2>
+            <div className='mt-2 mb-3 d-flex' >{typesList}</div>
+          </div>
+          <img className='pokedexContainer__pokemon__image'  
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${element.id}.png`}
+          alt={`pokemon_${element.id}`} />
         </div>
-        <img className='pokedexContainer__pokemon__image'  
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${element.id}.png`}
-        alt={`pokemon_${element.id}`} />
-      </div>
+      </Link>
     )
   })
 

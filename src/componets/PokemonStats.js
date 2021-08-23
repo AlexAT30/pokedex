@@ -5,10 +5,9 @@ const PokemonStats = ({ pokemon, speciesData }) => {
       <div className='row align-items-center mb-3' key={`STAT${index}`} >
         <p className='col-5 m-0' > {`${element.stat.name}:`} </p>
         <div className='col-5 '>
-          <div className='text-center text-bold color-white' style={{
+          <div className={`text-center text-bold color-white color-${pokemon.types[0].type.name}`} style={{
             height:'fit-content',
             width: `${element.base_stat}%`,
-            backgroundColor: speciesData.color.name
           }}> {element.base_stat} </div>
         </div>
       </div>
@@ -40,16 +39,16 @@ const PokemonStats = ({ pokemon, speciesData }) => {
     <div className='pokemonContainer__info row ps-3'>
       <div className='row mb-sm-3'>
         <div className='col-sm-6'>
-          <h3 style={{color: speciesData.color.name}} >Stats</h3>
+          <h3 className={`specialColor-${pokemon.types[0].type.name}`} >Stats</h3>
           {stats}
         </div>
         <div className='col-sm-6' >
-          <h3 style={{color: speciesData.color.name}} >Abilities</h3>
+          <h3 className={`specialColor-${pokemon.types[0].type.name}`} >Abilities</h3>
           {abilities}
         </div>
       </div>
       <div className='row col-12 mt-3'>
-        <h3 style={{color: speciesData.color.name}} >Moves</h3>
+        <h3 className={`specialColor-${pokemon.types[0].type.name}`} >Moves</h3>
         <div className='pokemonStats__moves' >
           {moves}
         </div>

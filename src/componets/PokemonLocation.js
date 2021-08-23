@@ -32,7 +32,7 @@ const PokemonLocation = ({ pokemon, speciesData }) => {
     })
     return (
       <div key={`LOC${index}`} className='col-12 row mb-4' >
-        <h3 className='all-mayus m-0 ' style={{color: speciesData.color.name}} > {element.location_area.name.replace(/-/g, ' ')} </h3>
+        <h3 className={`all-mayus m-0 specialColor-${pokemon.types[0].type.name}`} > {element.location_area.name.replace(/-/g, ' ')} </h3>
         {details}
       </div>
     )
