@@ -55,7 +55,7 @@ function App() {
             // Name filter
             const filterName = pokemonsByType.filter(element => element.name.indexOf(filterData.name.toLowerCase()) !== -1);
             setAllPokemons(filterName);
-            setCurrentPage(0);
+            // setCurrentPage(0);
           }
           filteredPokemonsNameType();
         }
@@ -69,7 +69,7 @@ function App() {
               setAllPokemons(pokemonsByType);
             }
             filteredPokemonType();
-            setCurrentPage(0);
+            // setCurrentPage(0);
           }
           // Name Filter
           if (filterData.name !== '') {
@@ -78,7 +78,7 @@ function App() {
               setAllPokemons(filterName)
             }
             filteredPokemonName();
-            setCurrentPage(0);
+            // setCurrentPage(0);
           }
           // Not filtered
           if ( filterData.name === '' && filterData.type === '' ) {
@@ -94,7 +94,7 @@ function App() {
   useEffect(
     () => {
       if (allPokemons) {
-        if (allPokemons.length === 0) {
+        if (allPokemons.length < 0) {
           setFailedSearch(true)
         }
         else {
@@ -114,20 +114,12 @@ function App() {
             setPokemonsData([])
             element = await serviceGet(element.url);
             setPokemonsData(data => [...data, element])
+            setPokemonsData(data => data = data.sort((a, b) => a.id - b.id))
           };
           getPokemonData(element)
         });
       }
     }, [page]
-  )
-
-  // Order
-  useEffect(
-    () => {
-      if (pokemonsData) {
-        setPokemonsData(data => data = data.sort((a, b) => a.id - b.id))
-      }
-    }, [pokemonsData]
   )
 
   return (

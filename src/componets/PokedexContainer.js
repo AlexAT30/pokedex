@@ -12,7 +12,7 @@ const PokedexContainer = ({ pokemonsData, register, handleSubmit, setFilterData,
       )
     })
     return (
-      <Link to={`/pokemon-${element.name}`} key={element.id} onClick={() => setCurrentPokemon(element)} style={{width:'100%'}} >
+      <Link to={{ pathname: `/pokemon-${element.name}`, state: {comeFromPokedex: true} }} key={element.id} onClick={() => setCurrentPokemon(element)} style={{width:'100%'}} >
         <div className={`pokedexContainer__pokemon col-11 color-${element.types[0].type.name}`} >
           <div className='ms-3' >
             <p className={`m-0 mt-1 specialColor-${element.types[0].type.name}`} > {`#${element.id}`} </p>
